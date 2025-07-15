@@ -25,15 +25,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'views')));
 
 // Showing home page
 app.get("/", function (req, res) {
     res.render("home");
-});
-
-
-app.get("/student_view_schedule", function (req, res) {
-    res.render("student_view_schedule");
 });
 
 // Showing register form
@@ -63,9 +59,7 @@ app.post("/login", async function (req, res) {
         if (user) {
             const result = req.body.password === user.password;
             if (result) {
-                app.get("/student_dashboard", function (req, res) {
-                    res.render("student_dashboard");
-                });
+                res.render("student_dashboard");
             } else {
                 res.status(400).json({ error: "password doesn't match" });
             }
@@ -86,8 +80,20 @@ app.get("/logout", function (req, res) {
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) return next();
-    res.redirect("/student_dashboard");
+    res.redirect("/view/student_dashboard");
 }
+
+app.get("/student_view_schedule", function (req, res) {
+    res.render("student_view_schedule");
+});
+
+app.get("/student_dashboard", function (req, res) {
+    res.render("student_dashboard");
+});
+
+app.get("/student_manage_courses", function (req, res) {
+    res.render("student_manage_courses");
+});
 
 let port = process.env.PORT || 3000;
 app.listen(port, function () {
