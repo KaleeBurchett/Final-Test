@@ -84,6 +84,36 @@ function isLoggedIn(req, res, next) {
     res.redirect("/view/student_dashboard");
 }
 
+
+// Showing login form
+app.get("/teacher_login", function (req, res) {
+    res.render("teacher_login");
+});
+
+// Handling user login
+app.post("/teacher_login", async function (req, res) {
+    try {
+        const user = await User.findOne({ username: req.body.username });
+        if (user) {
+            const result = req.body.password === user.password;
+            if (result) {
+                res.render("teacher_dashboard");
+            } else {
+                res.status(400).json({ error: "password doesn't match" });
+            }
+        } else {
+            res.status(400).json({ error: "User doesn't exist" });
+        }
+    } catch (error) {
+        res.status(400).json({ error });
+    }
+});
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect("/view/teacher_dashboard");
+}
+
 app.get("/student_view_schedule", function (req, res) {
     res.render("student_view_schedule");
 });
@@ -94,6 +124,22 @@ app.get("/student_dashboard", function (req, res) {
 
 app.get("/student_manage_courses", function (req, res) {
     res.render("student_manage_courses");
+});
+
+app.get("/teacher_login", function (req, res) {
+    res.render("teacher_login");
+});
+
+app.get("/teacher_dashboard", function (req, res) {
+    res.render("teacher_dashboard");
+});
+
+app.get("/add_course", function (req, res) {
+    res.render("add_course");
+});
+
+app.get("/teacher_manage_courses", function (req, res) {
+    res.render("teacher_manage_courses");
 });
 
 let port = process.env.PORT || 3000;
