@@ -42,7 +42,8 @@ app.get("/register", function (req, res) {
 app.post("/register", async (req, res) => {
     const user = await User.create({
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        teacherInputBox: req.body.teacherInputBox
     });
 
     return res.status(200).json(user);
@@ -60,6 +61,10 @@ app.post("/login", async function (req, res) {
         if (user) {
             const result = req.body.password === user.password;
             if (result) {
+                const teacherId = user.teacherInputBox === "pass";
+                if (teacherId) {
+                    res.status(400).json({ error: "User is a teacher, please use teacher login" })
+                }
                 res.render("student_dashboard");
             } else {
                 res.status(400).json({ error: "password doesn't match" });
@@ -97,8 +102,15 @@ app.post("/teacher_login", async function (req, res) {
         if (user) {
             const result = req.body.password === user.password;
             if (result) {
-                res.render("teacher_dashboard");
-            } else {
+                const teacherId = user.teacherInputBox === "pass";
+                if (teacherId) {
+                    res.render("teacher_dashboard");
+                }
+                else{
+                    res.status(400).json({ error: "not a teacher" });
+                }
+            }
+             else {
                 res.status(400).json({ error: "password doesn't match" });
             }
         } else {
