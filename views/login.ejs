@@ -10,10 +10,10 @@
 <body>
     <script src="D:\kalee\School\WebAppDev\Final Test\app.js"></script>
     <div class="wrapper">
-        <form id="loginForm" method="POST" action="/login">
+        <form id="loginForm" method="POST" action="/login" autocomplete="off" onsubmit="storeUser()">
             <h1>Student Login</h1>
             <div class="input-box">
-                 <label for="username"></label><input type="text" name="username" placeholder="Username" required><i class="bi bi-person-fill"></i>
+                 <label for="username"></label><input type="text" id="userInput" name="username" placeholder="Username" required><i class="bi bi-person-fill"></i>
             </div>
 
             <div class="input-box">
@@ -33,6 +33,13 @@
     </div>
 
     <div class="content">
+
+        <script>
+            function storeUser(){
+                var name = document.getElementById("userInput").value;
+                window.localStorage.setItem("user", name);
+            }
+        </script>
         
     </div>
     
